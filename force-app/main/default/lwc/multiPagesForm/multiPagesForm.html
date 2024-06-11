@@ -1,29 +1,33 @@
 <template>
     <lightning-record-edit-form object-api-name="Contact" onsubmit={handleSubmit} onsuccess={handleSuccess}>
         <lightning-tabset>
-            <lightning-tab label="Item One" value="1">
+            <lightning-tab label="Item One" value="1" onactive={handleStep}>
                 <lightning-input-field field-name="Name" onchange={handleName}> </lightning-input-field>
                 <lightning-input-field field-name="Birthdate" onchange={handleBirthdate}> </lightning-input-field>
             </lightning-tab>
-            <lightning-tab label="Item Two" value="2">
-                <lightning-input-field field-name="Country__c" onchange={handleCountry}> </lightning-input-field>
-                <lightning-input-field field-name="Phone" onchange={handlePhone}> </lightning-input-field>
-            </lightning-tab>
-            <lightning-tab label="Item Three" value="3">
-                <div>{contactName}</div>
-                <div>{contactBirthdate}</div>
-                <div>{contactCountry}</div>
-                <div>{contactPhone}</div>
-                <lightning-button class="slds-m-top_small" type="submit" label="Submit">
-                </lightning-button>
-            </lightning-tab>
+            <template if:true={nameExists}>
+                <lightning-tab label="Item Two" value="2" onactive={handleStep}>
+                    <lightning-input-field field-name="Country__c" onchange={handleCountry}> </lightning-input-field>
+                    <lightning-input-field field-name="Phone" onchange={handlePhone}> </lightning-input-field>
+                </lightning-tab>
+                <lightning-tab label="Item Three" value="3" onactive={handleStep}>
+                    <div>{contactName}</div>
+                    <div>{contactBirthdate}</div>
+                    <div>{contactCountry}</div>
+                    <div>{contactPhone}</div>
+                    <lightning-button class="slds-m-top_small" type="submit" label="Save">
+                    </lightning-button>
+                </lightning-tab>
+            </template>
         </lightning-tabset>
     </lightning-record-edit-form>
-    <lightning-progress-indicator current-step="3" type="base" has-error="true" variant="base">
+    <lightning-progress-indicator current-step={currentStep}>
         <lightning-progress-step label="Step 1" value="1"></lightning-progress-step>
         <lightning-progress-step label="Step 2" value="2"></lightning-progress-step>
         <lightning-progress-step label="Step 3" value="3"></lightning-progress-step>
-        <lightning-progress-step label="Step 4" value="4"></lightning-progress-step>
+        <template if:true={isComplete}>
+            <lightning-progress-step label="Step complete" value="complete" class="slds-hide"></lightning-progress-step>
+        </template>
     </lightning-progress-indicator>
 
 </template>
